@@ -51,12 +51,15 @@ export function createFakeVSCode() {
             registerTreeDataProvider: jest.fn(),
             showErrorMessage: jest.fn(),
             showQuickPick: jest.fn().mockResolvedValue(null),
+            showTextDocument: jest.fn(),
         },
         workspace: {
             getConfiguration: jest.fn(() => {
                 return { get: (name: string) => "" };
             }),
             onDidChangeConfiguration: jest.fn(),
+            openTextDocument: jest.fn(),
+
         },
     };
 }

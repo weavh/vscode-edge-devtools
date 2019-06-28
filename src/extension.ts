@@ -11,6 +11,7 @@ import {
     createTelemetryReporter,
     fixRemoteWebSocket,
     getBrowserPath,
+    getDevToolsPanelConfig,
     getListOfTargets,
     getRemoteEndpointSettings,
     IRemoteTargetJson,
@@ -37,9 +38,12 @@ export function activate(context: vscode.ExtensionContext) {
         launch(context);
     }));
 
-    // Register the launch provider
-    vscode.debug.registerDebugConfigurationProvider(`${SETTINGS_STORE_NAME}.debug`,
-        new LaunchDebugProvider(context, telemetryReporter, attach, launch));
+    // Register the launch providers
+    const debugTypes = [`${SETTINGS_STORE_NAME}.debug`, "msedge", "chrome"];
+    for (const debugType of debugTypes) {
+        vscode.debug.registerDebugConfigurationProvider(debugType,
+            new LaunchDebugProvider(context, telemetryReporter, attach, launch));
+    }
 
     // Register the side-panel view and its commands
     const cdpTargetsProvider = new CDPTargetsProvider(context, telemetryReporter);
@@ -59,7 +63,8 @@ export function activate(context: vscode.ExtensionContext) {
         `${SETTINGS_VIEW_NAME}.attach`,
         (target: CDPTarget) => {
             telemetryReporter.sendTelemetryEvent("view/devtools");
-            DevToolsPanel.createOrShow(context, telemetryReporter, target.websocketUrl);
+            const panelConfig = getDevToolsPanelConfig();
+            DevToolsPanel.createOrShow(context, telemetryReporter, target.websocketUrl, panelConfig);
         }));
     context.subscriptions.push(vscode.commands.registerCommand(
         `${SETTINGS_VIEW_NAME}.copyItem`,
@@ -114,13 +119,15 @@ export async function attach(context: vscode.ExtensionContext, attachUrl?: strin
         if (targetWebsocketUrl) {
             // Auto connect to found target
             telemetryReporter.sendTelemetryEvent("command/attach/devtools", telemetryProps);
-            DevToolsPanel.createOrShow(context, telemetryReporter, targetWebsocketUrl);
+            const panelConfig = getDevToolsPanelConfig(config);
+            DevToolsPanel.createOrShow(context, telemetryReporter, targetWebsocketUrl, panelConfig);
         } else {
             // Show the target list and allow the user to select one
             const selection = await vscode.window.showQuickPick(items);
             if (selection && selection.detail) {
                 telemetryReporter.sendTelemetryEvent("command/attach/devtools", telemetryProps);
-                DevToolsPanel.createOrShow(context, telemetryReporter, selection.detail);
+                const panelConfig = getDevToolsPanelConfig(config);
+                DevToolsPanel.createOrShow(context, telemetryReporter, selection.detail, panelConfig);
             }
         }
     } else {
@@ -142,7 +149,8 @@ export async function launch(context: vscode.ExtensionContext, launchUrl?: strin
     if (target && target.webSocketDebuggerUrl) {
         // Show the devtools
         telemetryReporter.sendTelemetryEvent("command/launch/devtools", telemetryProps);
-        DevToolsPanel.createOrShow(context, telemetryReporter, target.webSocketDebuggerUrl);
+        const panelConfig = getDevToolsPanelConfig(config);
+        DevToolsPanel.createOrShow(context, telemetryReporter, target.webSocketDebuggerUrl, panelConfig);
     } else {
         // Launch a new instance
         const browserPath = await getBrowserPath(config);

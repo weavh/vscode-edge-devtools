@@ -120,6 +120,11 @@
                     "type": "string",
                     "default": "",
                     "description": "A custom user data directory to use when launching the browser"
+                },
+                "vscode-edge-devtools.pathMapping": {
+                    "type": "object",
+                    "default": "",
+                    "description": "A set of mappings for rewriting the locations of source files from what the sourcemap says, to their locations on disk"
                 }
             }
         },
@@ -135,7 +140,8 @@
                             "type": "vscode-edge-devtools.debug",
                             "request": "launch",
                             "name": "Launch Microsoft Edge and open the Elements tool",
-                            "url": "http://localhost:8080"
+                            "url": "http://localhost:8080",
+                            "webRoot": "${workspaceFolder}/out"
                         }
                     },
                     {
@@ -145,7 +151,8 @@
                             "type": "vscode-edge-devtools.debug",
                             "request": "attach",
                             "name": "Attach to Microsoft Edge and open the Elements tool",
-                            "url": "http://localhost:8080"
+                            "url": "http://localhost:8080",
+                            "webRoot": "${workspaceFolder}/out"
                         }
                     }
                 ],
@@ -186,6 +193,29 @@
                                 "type": "boolean",
                                 "default": false,
                                 "description": "Should we request the remote target list using https rather than http"
+                            },
+                            "webRoot": {
+                                "type": "string",
+                                "description": "The absolute path to the webserver root. Used to resolve paths like `/app.js` to files on disk",
+                                "default": "${workspaceFolder}/out"
+                            },
+                            "pathMapping": {
+                                "type": "object",
+                                "description": "A mapping of URLs/paths to local folders, to resolve scripts in Microsoft Edge to scripts on disk",
+                                "default": {
+                                    "/": "${workspaceFolder}"
+                                }
+                            },
+                            "sourceMapPathOverrides": {
+                                "type": "object",
+                                "description": "A set of mappings for rewriting the locations of source files from what the sourcemap says, to their locations on disk",
+                                "default": {
+                                    "webpack:///./*": "${webRoot}/*",
+                                    "webpack:///src/*": "${webRoot}/*",
+                                    "webpack:///*": "*",
+                                    "webpack:///./~/*": "${webRoot}/node_modules/*",
+                                    "meteor://💻app/*": "${webRoot}/*"
+                                }
                             }
                         }
                     },
@@ -225,6 +255,29 @@
                                 "type": "boolean",
                                 "default": false,
                                 "description": "Should we request the remote target list using https rather than http"
+                            },
+                            "webRoot": {
+                                "type": "string",
+                                "description": "This specifies the workspace absolute path to the webserver root. Used to resolve paths like `/app.js` to files on disk.",
+                                "default": "${workspaceFolder}/out"
+                            },
+                            "pathMapping": {
+                                "type": "object",
+                                "description": "A mapping of URLs/paths to local folders, to resolve scripts in Microsoft Edge to scripts on disk",
+                                "default": {
+                                    "/": "${workspaceFolder}"
+                                }
+                            },
+                            "sourceMapPathOverrides": {
+                                "type": "object",
+                                "description": "A set of mappings for rewriting the locations of source files from what the sourcemap says, to their locations on disk",
+                                "default": {
+                                    "webpack:///./*": "${webRoot}/*",
+                                    "webpack:///src/*": "${webRoot}/*",
+                                    "webpack:///*": "*",
+                                    "webpack:///./~/*": "${webRoot}/node_modules/*",
+                                    "meteor://💻app/*": "${webRoot}/*"
+                                }
                             }
                         }
                     }
@@ -322,6 +375,7 @@
         "test": "npm run lint && jest --coverage"
     },
     "dependencies": {
+        "vscode-chrome-debug-core": "6.7.50",
         "vscode-extension-telemetry": "0.1.1",
         "ws": "6.2.0"
     },

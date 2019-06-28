@@ -3,6 +3,7 @@
 
 import * as path from "path";
 import * as vscode from "vscode";
+import * as debugCore from "vscode-chrome-debug-core";
 import TelemetryReporter from "vscode-extension-telemetry";
 import {
     encodeMessageForChannel,
@@ -13,7 +14,9 @@ import {
 } from "./common/webviewEvents";
 import { PanelSocket } from "./panelSocket";
 import {
+    applyPathMapping,
     fetchUri,
+    IPanelConfig,
     SETTINGS_PREF_DEFAULTS,
     SETTINGS_PREF_NAME,
     SETTINGS_STORE_NAME,
@@ -22,6 +25,7 @@ import {
 
 export class DevToolsPanel {
     private static instance: DevToolsPanel | undefined;
+    private readonly config: IPanelConfig;
     private readonly context: vscode.ExtensionContext;
     private readonly disposables: vscode.Disposable[] = [];
     private readonly extensionPath: string;
@@ -34,12 +38,14 @@ export class DevToolsPanel {
         panel: vscode.WebviewPanel,
         context: vscode.ExtensionContext,
         telemetryReporter: Readonly<TelemetryReporter>,
-        targetUrl: string) {
+        targetUrl: string,
+        config: IPanelConfig) {
         this.panel = panel;
         this.context = context;
         this.telemetryReporter = telemetryReporter;
         this.extensionPath = this.context.extensionPath;
         this.targetUrl = targetUrl;
+        this.config = config;
 
         // Hook up the socket events
         this.panelSocket = new PanelSocket(this.targetUrl, (e, msg) => this.postToDevTools(e, msg));
@@ -49,6 +55,7 @@ export class DevToolsPanel {
         this.panelSocket.on("getState", (msg) => this.onSocketGetState(msg));
         this.panelSocket.on("setState", (msg) => this.onSocketSetState(msg));
         this.panelSocket.on("getUrl", (msg) => this.onSocketGetUrl(msg));
+        this.panelSocket.on("openInEditor", (msg) => this.onSocketOpenInEditor(msg));
 
         // Handle closing
         this.panel.onDidDispose(() => {
@@ -168,6 +175,36 @@ export class DevToolsPanel {
         encodeMessageForChannel((msg) => this.panel.webview.postMessage(msg), "getUrl", { id: request.id, content });
     }
 
+    private async onSocketOpenInEditor(message: string) {
+        const { column, line, url } = JSON.parse(message) as { column: number, line: number, url: string };
+
+        let sourcePath = url;
+        if (this.config.sourceMapPathOverrides) {
+            sourcePath = applyPathMapping(sourcePath, this.config.sourceMapPathOverrides, this.config.webRoot);
+        } else {
+            sourcePath = applyPathMapping(sourcePath, this.config.pathMapping, this.config.webRoot);
+        }
+
+        sourcePath = debugCore.utils.canonicalizeUrl(sourcePath);
+
+        let uri: vscode.Uri;
+        try {
+            uri = vscode.Uri.file(sourcePath);
+        } catch {
+            uri = vscode.Uri.parse(sourcePath, true);
+        }
+        if (uri) {
+            const doc = await vscode.workspace.openTextDocument(uri);
+            vscode.window.showTextDocument(
+                doc,
+                {
+                    preserveFocus: true,
+                    selection: new vscode.Range(line, column, line, column),
+                    viewColumn: vscode.ViewColumn.One,
+                });
+        }
+    }
+
     private update() {
         this.panel.webview.html = this.getHtmlForWebview();
     }
@@ -204,7 +241,8 @@ export class DevToolsPanel {
     public static createOrShow(
         context: vscode.ExtensionContext,
         telemetryReporter: Readonly<TelemetryReporter>,
-        targetUrl: string) {
+        targetUrl: string,
+        config: IPanelConfig) {
         const column = vscode.ViewColumn.Beside;
 
         if (DevToolsPanel.instance) {
@@ -216,7 +254,7 @@ export class DevToolsPanel {
                 retainContextWhenHidden: true,
             });
 
-            DevToolsPanel.instance = new DevToolsPanel(panel, context, telemetryReporter, targetUrl);
+            DevToolsPanel.instance = new DevToolsPanel(panel, context, telemetryReporter, targetUrl, config);
         }
     }
 }

@@ -26,6 +26,7 @@ describe("extension", () => {
                 SETTINGS_STORE_NAME,
                 SETTINGS_VIEW_NAME,
                 createTelemetryReporter: jest.fn((_: ExtensionContext) => createFakeTelemetryReporter()),
+                getDevToolsPanelConfig: jest.fn(),
                 getListOfTargets: jest.fn(),
                 getRemoteEndpointSettings: jest.fn(),
                 removeTrailingSlash: jest.fn(removeTrailingSlash),
@@ -165,6 +166,7 @@ describe("extension", () => {
                 utils: {
                     createTelemetryReporter: jest.fn((_: ExtensionContext) => mockTelemetry),
                     fixRemoteWebSocket: jest.fn().mockReturnValue(target),
+                    getDevToolsPanelConfig: jest.fn().mockResolvedValue({}),
                     getListOfTargets: jest.fn().mockResolvedValue([target]),
                     getRemoteEndpointSettings: jest.fn().mockReturnValue({
                         hostname: "hostname",
@@ -235,6 +237,7 @@ describe("extension", () => {
                 expectedContext,
                 mockTelemetry,
                 expectedPick.detail,
+                expect.any(Object),
             );
         });
 
@@ -256,6 +259,7 @@ describe("extension", () => {
                 expectedContext,
                 mockTelemetry,
                 expectedWS,
+                expect.any(Object),
             );
         });
 
@@ -277,6 +281,7 @@ describe("extension", () => {
                 expectedContext,
                 mockTelemetry,
                 expectedWS,
+                expect.any(Object),
             );
 
             // Reverse the mismatched slashes
@@ -286,6 +291,7 @@ describe("extension", () => {
                 expectedContext,
                 mockTelemetry,
                 expectedWS,
+                expect.any(Object),
             );
         });
 
@@ -326,6 +332,7 @@ describe("extension", () => {
             mockUtils = {
                 createTelemetryReporter: jest.fn((_: ExtensionContext) => mockReporter),
                 getBrowserPath: jest.fn().mockResolvedValue("path"),
+                getDevToolsPanelConfig: jest.fn().mockResolvedValue({}),
                 getListOfTargets: jest.fn().mockResolvedValue(null),
                 getRemoteEndpointSettings: jest.fn().mockReturnValue({
                     hostname: "hostname",
@@ -417,6 +424,7 @@ describe("extension", () => {
                 expect.any(Object),
                 expect.any(Object),
                 target.webSocketDebuggerUrl,
+                expect.any(Object),
             );
         });
 

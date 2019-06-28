@@ -57,6 +57,12 @@ export default class LaunchDebugProvider implements vscode.DebugConfigurationPro
                 this.telemetryReporter.sendTelemetryEvent("debug/launch");
                 this.launch(this.context, targetUri, userConfig);
             }
+        } else if (config && (config.type === "msedge" || config.type === "chrome")) {
+            setTimeout(() => {
+                const targetUri: string = this.getUrlFromConfig(folder, config);
+                this.attach(this.context, targetUri, userConfig);
+            }, 3000);
+            return Promise.resolve(config as vscode.DebugConfiguration);
         } else {
             this.telemetryReporter.sendTelemetryEvent("debug/error/config_not_found");
             vscode.window.showErrorMessage("No supported launch config was found.");

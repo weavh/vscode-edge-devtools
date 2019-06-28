@@ -28,6 +28,19 @@ export interface IUserConfig {
     port: number;
     useHttps: boolean;
     userDataDirectory: string;
+    webRoot: string;
+    pathMapping: IStringDictionary<string>;
+    sourceMapPathOverrides: IStringDictionary<string>;
+}
+
+export interface IPanelConfig {
+    pathMapping: IStringDictionary<string>;
+    sourceMapPathOverrides: IStringDictionary<string>;
+    webRoot: string;
+}
+
+export interface IStringDictionary<T> {
+    [name: string]: T;
 }
 
 export type Platform = "Windows" | "OSX" | "Linux";
@@ -45,6 +58,18 @@ export const SETTINGS_PREF_DEFAULTS = {
     uiTheme: '"dark"',
 };
 export const SETTINGS_VIEW_NAME = "vscode-edge-devtools-view";
+
+export const DEFAULT_PATH_MAPPING: IStringDictionary<string> = {
+    "/": "${workspaceFolder}",
+};
+export const DEFAULT_PATH_OVERRIDES: IStringDictionary<string> = {
+    "meteor://💻app/*": "${webRoot}/*",
+    "webpack:///*": "*",
+    "webpack:///./*": "${webRoot}/*",
+    "webpack:///./~/*": "${webRoot}/node_modules/*",
+    "webpack:///src/*": "${webRoot}/*",
+};
+export const DEFAULT_WEB_ROOT: string = "${workspaceFolder}/out";
 
 const WIN_APP_DATA = process.env.LOCALAPPDATA || "/";
 const WIN_MSEDGE_PATHS = [
@@ -281,4 +306,81 @@ export async function openNewTab(hostname: string, port: number, tabUrl?: string
  */
 export function removeTrailingSlash(uri: string) {
     return (uri.endsWith("/") ? uri.slice(0, -1) : uri);
+}
+
+export function getDevToolsPanelConfig(config: Partial<IUserConfig> = {}) {
+    const settings = vscode.workspace.getConfiguration(SETTINGS_STORE_NAME);
+    const pathMapping = config.pathMapping || settings.get("pathMapping") || DEFAULT_PATH_MAPPING;
+    const sourceMapPathOverrides =
+        config.sourceMapPathOverrides || settings.get("sourceMapPathOverrides") || DEFAULT_PATH_OVERRIDES;
+    const webRoot = config.webRoot || settings.get("webRoot") || DEFAULT_WEB_ROOT;
+
+    return {
+        pathMapping,
+        sourceMapPathOverrides,
+        webRoot,
+    };
+}
+
+export function escapeRegexSpecialChars(str: string, except?: string): string {
+    const useRegexChars = "/\\.?*()^${}|[]+"
+        .split("")
+        .filter((c) => !except || except.indexOf(c) < 0)
+        .join("")
+        .replace(/[\\\]]/g, "\\$&");
+
+    const r = new RegExp(`[${useRegexChars}]`, "g");
+    return str.replace(r, "\\$&");
+}
+
+export function applyPathMapping(
+    sourcePath: string,
+    pathMapping: IStringDictionary<string>,
+    webRoot?: string): string {
+    const forwardSlashSourcePath = sourcePath.replace(/\\/g, "/");
+
+    // Sort the overrides by length, large to small
+    const sortedOverrideKeys = Object.keys(pathMapping)
+        .sort((a, b) => b.length - a.length);
+
+    // Iterate the key/values, only apply the first one that matches.
+    for (const leftPattern of sortedOverrideKeys) {
+        const rightPattern = pathMapping[leftPattern];
+
+        const asterisks = leftPattern.match(/\*/g) || [];
+        if (asterisks.length > 1) {
+            continue;
+        }
+
+        const replacePatternAsterisks = rightPattern.match(/\*/g) || [];
+        if (replacePatternAsterisks.length > asterisks.length) {
+            continue;
+        }
+
+        // Does it match?
+        const escapedLeftPattern = escapeRegexSpecialChars(leftPattern, "/*");
+        const leftRegexSegment = escapedLeftPattern
+            .replace(/\*/g, "(.*)")
+            .replace(/\\\\/g, "/");
+        const leftRegex = new RegExp(`^${leftRegexSegment}$`, "i");
+        const overridePatternMatches = forwardSlashSourcePath.match(leftRegex);
+        if (!overridePatternMatches) {
+            continue;
+        }
+
+        // Grab the value of the wildcard from the match above, replace the wildcard in the
+        // replacement pattern, and return the result.
+        const wildcardValue = overridePatternMatches[1];
+        let mappedPath = rightPattern.replace(/\*/g, wildcardValue);
+        mappedPath = path.join(mappedPath); // Fix any ..
+        if (webRoot) {
+            mappedPath = mappedPath.replace("${webRoot}", webRoot);
+            mappedPath = mappedPath.replace(
+                "${workspaceFolder}",
+                vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.toString() : "" || "");
+        }
+        return mappedPath;
+    }
+
+    return sourcePath;
 }
