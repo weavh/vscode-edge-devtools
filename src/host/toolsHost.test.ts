@@ -71,6 +71,11 @@ describe("toolsHost", () => {
             const expectedArgs2 = { id: 1, preferences: { ...expectedPref2 } };
             host.onMessageFromChannel("getState", JSON.stringify(expectedArgs2));
             expect(mockCallback2).toHaveBeenCalledWith(expectedPref2);
+
+            // Ensure we don't complete it again
+            mockCallback.mockClear();
+            host.onMessageFromChannel("getState", JSON.stringify(expectedArgs));
+            expect(mockCallback).not.toHaveBeenCalled();
         });
     });
 
@@ -230,6 +235,16 @@ describe("toolsHost", () => {
                 expectedArgs.id,
                 expectedArgs.content,
             );
+        });
+
+        it("ignores results with no resource loader", async () => {
+            const { default: toolsHost } = await import("./toolsHost");
+            const host = new toolsHost();
+
+            const expectedArgs = { id: 0, content: "some content" };
+            host.onMessageFromChannel("getUrl", JSON.stringify(expectedArgs));
+
+            expect(mockResourceLoader.onResolvedUrlFromChannel).not.toHaveBeenCalled();
         });
 
         it("calls onMessageFromChannel on websocket message", async () => {

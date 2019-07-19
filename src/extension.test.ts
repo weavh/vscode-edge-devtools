@@ -55,6 +55,11 @@ describe("extension", () => {
             // Activation should create a new reporter
             newExtension.activate(context);
             expect(mockUtils.createTelemetryReporter).toHaveBeenCalled();
+
+            // Second activation should not create a new reporter
+            mockUtils.createTelemetryReporter!.mockClear();
+            newExtension.activate(context);
+            expect(mockUtils.createTelemetryReporter).not.toHaveBeenCalled();
         });
 
         it("registers commands correctly", async () => {

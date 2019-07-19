@@ -70,17 +70,34 @@ describe("toolsWebSocket", () => {
             const { default: toolsWebSocket } = await import("./toolsWebSocket");
             const websocket = new toolsWebSocket("some url");
 
-            websocket.onerror = jest.fn();
+            const mockHandler = jest.fn();
+
+            websocket.onerror = mockHandler;
             websocket.onMessageFromChannel("error");
-            expect(websocket.onerror).toBeCalled();
+            expect(mockHandler).toBeCalled();
 
-            websocket.onopen = jest.fn();
+            mockHandler.mockClear();
+            websocket.onerror = undefined;
+            websocket.onMessageFromChannel("error");
+            expect(mockHandler).not.toBeCalled();
+
+            websocket.onopen = mockHandler;
             websocket.onMessageFromChannel("open");
-            expect(websocket.onopen).toBeCalled();
+            expect(mockHandler).toBeCalled();
 
-            websocket.onclose = jest.fn();
+            mockHandler.mockClear();
+            websocket.onopen = undefined;
+            websocket.onMessageFromChannel("open");
+            expect(mockHandler).not.toBeCalled();
+
+            websocket.onclose = mockHandler;
             websocket.onMessageFromChannel("close");
-            expect(websocket.onclose).toBeCalled();
+            expect(mockHandler).toBeCalled();
+
+            mockHandler.mockClear();
+            websocket.onclose = undefined;
+            websocket.onMessageFromChannel("close");
+            expect(mockHandler).not.toBeCalled();
         });
 
         it("forwards websocket messages to onmessage", async () => {

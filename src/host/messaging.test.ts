@@ -56,12 +56,18 @@ describe("messaging", () => {
         const windowListenerMock = window.addEventListener as jest.Mock;
         expect(windowListenerMock).toHaveBeenCalledTimes(2);
 
+        const messageCallback = windowListenerMock.mock.calls[1][1];
+        const messageThis = windowListenerMock.mock.instances[1];
+
+        // Ensure messages to tool window are ignored before DOMContentLoaded
+        const expectedIgnoredMessage = "to tools window";
+        messageCallback.call(messageThis,
+            { origin: "", data: expectedIgnoredMessage } as MessageEvent);
+        expect(mockToolsWindow.contentWindow.postMessage).not.toBeCalled();
+
         // Simulate DOMContentLoaded
         const { callback, thisObj } = getFirstCallback(windowListenerMock, 1);
         callback.call(thisObj);
-
-        const messageCallback = windowListenerMock.mock.calls[1][1];
-        const messageThis = windowListenerMock.mock.instances[1];
 
         const expectedToolsWindowMessage = "to tools window";
         messageCallback.call(messageThis,

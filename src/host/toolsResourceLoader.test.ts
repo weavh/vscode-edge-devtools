@@ -85,6 +85,11 @@ describe("toolsResourceLoader", () => {
 
             const content = await contentPromise;
             expect(content).toEqual(expectedContent);
+
+            // Ensure we don't complete it again
+            resourceLoader.onResolvedUrlFromChannel(0, "Some new content that should be ignored");
+            const newContent = await contentPromise;
+            expect(newContent).toEqual(expectedContent);
         });
 
         it("uses real loader for packaged files", async () => {

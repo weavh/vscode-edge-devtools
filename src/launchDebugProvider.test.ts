@@ -96,5 +96,16 @@ describe("launchDebugProvider", () => {
             expect(result).toBeUndefined();
             expect(mockReporter.sendTelemetryEvent).toHaveBeenCalled();
         });
+
+        it("ignores bad configs", async () => {
+            const mockConfig = {
+                name: "config",
+                request: "invalid config",
+                type: `${SETTINGS_STORE_NAME}.debug`,
+            };
+            await host.resolveDebugConfiguration(undefined, mockConfig, undefined);
+            expect(attach).not.toHaveBeenCalled();
+            expect(launch).not.toHaveBeenCalled();
+        });
     });
 });

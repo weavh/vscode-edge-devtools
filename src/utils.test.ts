@@ -57,6 +57,12 @@ describe("utils", () => {
 
             const fixed = utils.fixRemoteWebSocket("localhost", 9222, target);
             expect(fixed.webSocketDebuggerUrl).toBe(expectedWSUrl);
+
+            const noTarget = {
+                url: expectedWSUrl,
+            } as IRemoteTargetJson;
+            const fixed2 = utils.fixRemoteWebSocket("localhost", 9222, noTarget);
+            expect(fixed2.webSocketDebuggerUrl).toBeUndefined();
         });
     });
 
@@ -238,8 +244,10 @@ describe("utils", () => {
             httpGetMock.mockClear();
 
             const mockOn = jest.fn()
-                .mockImplementationOnce((_name, callback) => {
-                    setTimeout(() => callback("error"), 0); // Async to allow the await to work
+                .mockImplementationOnce((_name, onCallback) => {
+                    onCallback("");
+                }).mockImplementationOnce((_name, onCallback) => {
+                    onCallback();
                 }).mockImplementationOnce((_name, onCallback) => {
                     onCallback(expectedListResponse);
                 }).mockImplementationOnce((_name, onCallback) => {
@@ -247,10 +255,6 @@ describe("utils", () => {
                 });
 
             httpGetMock.mockImplementationOnce((_options: object, callback: (resp: object) => void) => {
-                return {
-                    on: mockOn,
-                };
-            }).mockImplementationOnce((_options: object, callback: (resp: object) => void) => {
                 const resp = {
                     on: mockOn,
                     statusCode: 200,
@@ -371,7 +375,7 @@ describe("utils", () => {
             expect(result5.userDataDir).toEqual(expect.stringContaining("vscode-edge-devtools-userdatadir_"));
 
             // No folder if they use a browser path
-            const result6 = utils.getRemoteEndpointSettings({ browserPath: "someBrowser.exe"});
+            const result6 = utils.getRemoteEndpointSettings({ browserPath: "someBrowser.exe" });
             expect(result6.userDataDir).toEqual("");
         });
     });
@@ -599,7 +603,7 @@ describe("utils", () => {
     describe("getRuntimeConfig", () => {
         it("returns the stored settings", async () => {
             const expected = {
-                pathMapping:  {
+                pathMapping: {
                     "/app": "${workspaceFolder}/dist",
                 },
                 sourceMapPathOverrides: {
@@ -626,7 +630,7 @@ describe("utils", () => {
 
         it("uses user config", async () => {
             const config = {
-                pathMapping:  {
+                pathMapping: {
                     "/app": "${workspaceFolder}/dist",
                 },
                 sourceMapPathOverrides: {

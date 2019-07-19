@@ -21,6 +21,18 @@ describe("simpleView", () => {
         expect(mockOpen).toHaveBeenCalled();
     });
 
+    it("revealInVSCode ignores invalid links", async () => {
+        const apply = await import("./simpleView");
+
+        const mockOpen = jest.fn();
+        (global as any).InspectorFrontendHost = {
+            openInEditor: mockOpen,
+        };
+
+        await apply.revealInVSCode(undefined, false);
+        expect(mockOpen).not.toHaveBeenCalled();
+    });
+
     it("applyCommonRevealerPatch correctly changes text", async () => {
         const apply = await import("./simpleView");
         const result = apply.applyCommonRevealerPatch(

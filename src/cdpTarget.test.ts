@@ -75,5 +75,8 @@ describe("CDPTarget", () => {
         const { default: cdpTarget } = await import("./cdpTarget");
         const target = new cdpTarget(json, "");
         expect(target.getChildren().length).toEqual(4);
+
+        const target2 = new cdpTarget(json, "url");
+        expect(target2.getChildren().length).toEqual(0);
     });
 });

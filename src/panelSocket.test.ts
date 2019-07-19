@@ -81,6 +81,10 @@ describe("panelSocket", () => {
         panelSocket.dispose();
         expect(mockWebSocket.close).toHaveBeenCalled();
         expect(panelSocket.isConnectedToTarget).toEqual(false);
+
+        // Ensure re-opening the websocket is ignored after dispose
+        mockWebSocket.onopen.call(mockWebSocket);
+        expect(mockWebSocket.send).not.toHaveBeenCalled();
     });
 
     it("buffers messages until connection is open", async () => {

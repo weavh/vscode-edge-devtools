@@ -95,6 +95,7 @@ describe("devtoolsPanel", () => {
                 };
                 expectedDisposables.push(disposable);
                 disposables.push(disposable);
+                disposables.push(undefined); // Add an already disposed one to ensure we handle it correctly
                 return { dispose: jest.fn() };
             };
 
