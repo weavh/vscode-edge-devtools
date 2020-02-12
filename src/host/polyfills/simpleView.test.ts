@@ -60,9 +60,15 @@ describe("simpleView", () => {
     });
 
     it("applyMainViewPatch correctly changes text", async () => {
+        const comparableText = "const moreTools = getExtensions();";
+        let fileContents = getTextFromFile("main/MainImpl.js");
+        // The file was not found, so test that at least the text is being replaced.
+        fileContents = fileContents ? fileContents : comparableText;
         const apply = await import("./simpleView");
-        const result = apply.applyMainViewPatch("const moreTools = getExtensions();");
-        expect(result).toEqual("const moreTools = { defaultSection: () => ({ appendItem: () => {} }) };");
+        const result = apply.applyMainViewPatch(comparableText);
+        expect(result).not.toEqual(null);
+        expect(result).toEqual(
+            expect.stringContaining("const moreTools = { defaultSection: () => ({ appendItem: () => {} }) };"));
     });
 
     it("applySelectTabPatch correctly changes text", async () => {

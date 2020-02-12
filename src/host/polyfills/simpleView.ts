@@ -40,7 +40,7 @@ export function applyInspectorViewPatch(content: string) {
     const pattern = /handleAction\(context,\s*actionId\)\s*{/g;
     const drawerPattern = /_showDrawer\(focus\)\s*{/g;
 
-    if (content.match(pattern)) {
+    if (content.match(pattern) && content.match(drawerPattern)) {
         return content
         .replace(pattern, "handleAction(context, actionId) { return false;")
         .replace(drawerPattern, "_showDrawer(focus) { return false;");
@@ -50,9 +50,13 @@ export function applyInspectorViewPatch(content: string) {
 }
 
 export function applyMainViewPatch(content: string) {
-    return content.replace(
-        /const moreTools\s*=\s*[^;]+;/g,
-        "const moreTools = { defaultSection: () => ({ appendItem: () => {} }) };");
+    const pattern = /const moreTools\s*=\s*[^;]+;/g;
+
+    if (content.match(pattern)) {
+        content.replace(pattern, "const moreTools = { defaultSection: () => ({ appendItem: () => {} }) };");
+    } else {
+        return null;
+    }
 }
 
 export function applySelectTabPatch(content: string) {
