@@ -62,6 +62,7 @@ describe("simpleView", () => {
     it("applyMainViewPatch correctly changes text", async () => {
         const comparableText = "const moreTools = getExtensions();";
         let fileContents = getTextFromFile("main/MainImpl.js");
+
         // The file was not found, so test that at least the text is being replaced.
         fileContents = fileContents ? fileContents : comparableText;
         const apply = await import("./simpleView");
@@ -72,12 +73,15 @@ describe("simpleView", () => {
     });
 
     it("applySelectTabPatch correctly changes text", async () => {
-        const apply = await import("./simpleView");
-        const result = apply.applySelectTabPatch("selectTab(id, userGesture, forceFocus) { // code");
-        expect(result).toEqual(expect.stringContaining("selectTab(id, userGesture, forceFocus) { if ("));
+        const comparableText = "selectTab(id, userGesture, forceFocus) { // code";
+        let fileContents = getTextFromFile("ui/TabbedPane.js");
 
-        const result2 = apply.applySelectTabPatch("selectTab(id, userGesture, forceFocus) { // code");
-        expect(result2).toEqual(expect.stringContaining("selectTab(id, userGesture, forceFocus) { if ("));
+        // The file was not found, so test that at least the text is being replaced.
+        fileContents = fileContents ? fileContents : comparableText;
+        const apply = await import("./simpleView");
+        const result = apply.applySelectTabPatch(fileContents);
+        expect(result).not.toEqual(null);
+        expect(result).toEqual(expect.stringContaining("selectTab(id, userGesture, forceFocus) { if ("));
     });
 
     it("applyInspectorCommonCssPatch correctly changes tabbed-pane-header-contents", async () => {

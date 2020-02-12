@@ -84,9 +84,13 @@ export function applySelectTabPatch(content: string) {
 
     const pattern = /selectTab\(id,\s*userGesture,\s*forceFocus\)\s*{/g;
 
-    return content.replace(
-        pattern,
-        `selectTab(id, userGesture, forceFocus) { if (${condition}) return false;`);
+    if (content.match(pattern)) {
+        return content.replace(
+            pattern,
+            `selectTab(id, userGesture, forceFocus) { if (${condition}) return false;`);
+    } else {
+        return null;
+    }
 }
 
 export function applyInspectorCommonCssPatch(content: string, isRelease?: boolean) {
