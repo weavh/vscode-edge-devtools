@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
+import { getTextFromFile } from "../../test/helpers";
 
 describe("simpleView", () => {
     it("revealInVSCode calls openInEditor", async () => {
@@ -23,11 +24,18 @@ describe("simpleView", () => {
     });
 
     it("applyCommonRevealerPatch correctly changes text", async () => {
+        const comparableText = "let reveal = function(revealable, omitFocus) { // code";
+        let fileContents = getTextFromFile("common/Revealer.js");
+        if (!fileContents) {
+            // The file was not found, so test that at least the text is being replaced.
+            fileContents = comparableText;
+        }
+
         const apply = await import("./simpleView");
-        const result = apply.applyCommonRevealerPatch(
-            "Common.Revealer.reveal = function(revealable, omitFocus) { // code");
+        const result = apply.applyCommonRevealerPatch(fileContents);
+        expect(result).not.toEqual(null);
         expect(result).toEqual(
-            expect.stringContaining("Common.Revealer.reveal = function revealInVSCode(revealable, omitFocus) {"));
+            expect.stringContaining("let reveal = function revealInVSCode(revealable, omitFocus) {"));
     });
 
     it("applyInspectorViewPatch correctly changes text", async () => {

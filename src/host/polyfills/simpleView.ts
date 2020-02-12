@@ -27,9 +27,13 @@ export function revealInVSCode(revealable: IRevealable | undefined, omitFocus: b
 }
 
 export function applyCommonRevealerPatch(content: string) {
-    return content.replace(
-        /Common\.Revealer\.reveal\s*=\s*function\(revealable,\s*omitFocus\)\s*{/g,
-        `Common.Revealer.reveal = ${revealInVSCode.toString().slice(0, -1)}`);
+    const pattern = /let reveal\s*=\s*function\(revealable,\s*omitFocus\)\s*{/g;
+    if (content.match(pattern)) {
+        return content.replace(pattern,
+            `let reveal = ${revealInVSCode.toString().slice(0, -1)}`);
+    } else {
+        return null;
+    }
 }
 
 export function applyInspectorViewPatch(content: string) {
