@@ -37,13 +37,16 @@ export function applyCommonRevealerPatch(content: string) {
 }
 
 export function applyInspectorViewPatch(content: string) {
-    return content
-        .replace(
-            /handleAction\(context,\s*actionId\)\s*{/g,
-            "handleAction(context, actionId) { return false;")
-        .replace(
-            /_showDrawer\(focus\)\s*{/g,
-            "_showDrawer(focus) { return false;");
+    const pattern = /handleAction\(context,\s*actionId\)\s*{/g;
+    const drawerPattern = /_showDrawer\(focus\)\s*{/g;
+
+    if (content.match(pattern)) {
+        return content
+        .replace(pattern, "handleAction(context, actionId) { return false;")
+        .replace(drawerPattern, "_showDrawer(focus) { return false;");
+    } else {
+        return null;
+    }
 }
 
 export function applyMainViewPatch(content: string) {
