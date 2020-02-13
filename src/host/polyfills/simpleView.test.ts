@@ -119,9 +119,14 @@ describe("simpleView", () => {
         const expectedResult = `.tabbed-pane-tab-slider {
             display: none !important;
         }`;
+        let fileContents = getTextFromFile("shell.js");
+
+        // The file was not found, so test that at least the text is being replaced.
+        fileContents = fileContents ? fileContents : expectedCss;
         const apply = await import("./simpleView");
-        const result = apply.applyInspectorCommonCssPatch(expectedCss);
-        expect(result === expectedResult).toEqual(true);
+        const result = apply.applyInspectorCommonCssPatch(fileContents);
+        expect(result).not.toEqual(null);
+        expect(result).toEqual(expect.stringContaining(expectedResult));
     });
 
     it("applyInspectorCommonCssPatch correctly changes tabbed-pane-right-toolbar", async () => {
@@ -132,9 +137,14 @@ describe("simpleView", () => {
         const expectedResult = `.tabbed-pane-right-toolbar {
             display: none !important;
         }`;
+        let fileContents = getTextFromFile("shell.js");
+
+        // The file was not found, so test that at least the text is being replaced.
+        fileContents = fileContents ? fileContents : expectedCss;
         const apply = await import("./simpleView");
-        const result = apply.applyInspectorCommonCssPatch(expectedCss);
-        expect(result === expectedResult).toEqual(true);
+        const result = apply.applyInspectorCommonCssPatch(fileContents);
+        expect(result).not.toEqual(null);
+        expect(result).toEqual(expect.stringContaining(expectedResult));
     });
 
     it("applyInspectorCommonCssPatch correctly changes tabbed-pane-header-contents in release mode", async () => {
@@ -146,9 +156,14 @@ describe("simpleView", () => {
         }`;
         const expectedResult =
             ".main-tabbed-pane .tabbed-pane-header-contents {\\n            display: none !important;\\n        }";
+        let fileContents = getTextFromFile("shell.js");
+
+        // The file was not found, so test that at least the text is being replaced.
+        fileContents = fileContents ? fileContents : expectedCss;
         const apply = await import("./simpleView");
-        const result = apply.applyInspectorCommonCssPatch(expectedCss, true);
-        expect(result === expectedResult).toEqual(true);
+        const result = apply.applyInspectorCommonCssPatch(fileContents, true);
+        expect(result).not.toEqual(null);
+        expect(result).toEqual(expect.stringContaining(expectedResult));
     });
 
     it("applyInspectorCommonCssPatch correctly changes tabbed-pane-tab-slider in release mode", async () => {
@@ -165,9 +180,14 @@ describe("simpleView", () => {
         }`;
         const expectedResult =
             ".tabbed-pane-tab-slider {\\n            display: none !important;\\n        }";
+        let fileContents = getTextFromFile("shell.js");
+
+        // The file was not found, so test that at least the text is being replaced.
+        fileContents = fileContents ? fileContents : expectedCss;
         const apply = await import("./simpleView");
-        const result = apply.applyInspectorCommonCssPatch(expectedCss, true);
-        expect(result === expectedResult).toEqual(true);
+        const result = apply.applyInspectorCommonCssPatch(fileContents, true);
+        expect(result).not.toEqual(null);
+        expect(result).toEqual(expect.stringContaining(expectedResult));
     });
 
     it("applyInspectorCommonCssPatch correctly changes tabbed-pane-right-toolbar in release mode", async () => {
@@ -177,8 +197,13 @@ describe("simpleView", () => {
         }`;
         const expectedResult =
             ".tabbed-pane-right-toolbar {\\n            display: none !important;\\n        }";
+        let fileContents = getTextFromFile("shell.js");
+
+        // The file was not found, so test that at least the text is being replaced.
+        fileContents = fileContents ? fileContents : expectedCss;
         const apply = await import("./simpleView");
-        const result = apply.applyInspectorCommonCssPatch(expectedCss, true);
-        expect(result === expectedResult).toEqual(true);
+        const result = apply.applyInspectorCommonCssPatch(fileContents, true);
+        expect(result).not.toEqual(null);
+        expect(result).toEqual(expect.stringContaining(expectedResult));
     });
 });
