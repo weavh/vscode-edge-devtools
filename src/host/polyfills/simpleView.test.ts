@@ -26,10 +26,9 @@ describe("simpleView", () => {
     it("applyCommonRevealerPatch correctly changes text", async () => {
         const comparableText = "let reveal = function(revealable, omitFocus) { // code";
         let fileContents = getTextFromFile("common/Revealer.js");
-        if (!fileContents) {
-            // The file was not found, so test that at least the text is being replaced.
-            fileContents = comparableText;
-        }
+
+        // The file was not found, so test that at least the text is being replaced.
+        fileContents = fileContents ? fileContents : comparableText;
 
         const apply = await import("./simpleView");
         const result = apply.applyCommonRevealerPatch(fileContents);
