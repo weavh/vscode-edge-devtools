@@ -110,14 +110,23 @@ export function applyInspectorCommonCssPatch(content: string, isRelease?: boolea
 
     // we need to do this by parts as the code is split between base.css
     // and dark.css
-    let result = content.replace(
-        /(\.main-tabbed-pane\s*\.tabbed-pane-header-contents\s*\{([^\}]*)?\})/g,
-        cssHeaderContents);
-    result = result.replace(
-            /(\.tabbed-pane-right-toolbar\s*\{([^\}]*)?\})/g,
-            cssRightToolbar);
-    result = result.replace(
-        /(\.tabbed-pane-tab-slider\s*\{([^\}]*)?\})/g,
-        cssTabSlider);
-    return result;
+    const mainPattern = /(\.main-tabbed-pane\s*\.tabbed-pane-header-contents\s*\{([^\}]*)?\})/g;
+    const tabbedPanePattern = /(\.tabbed-pane-right-toolbar\s*\{([^\}]*)?\})/g;
+    const tabbedPaneSlider = /(\.tabbed-pane-tab-slider\s*\{([^\}]*)?\})/g;
+
+    if (content.match(mainPattern) && content.match(tabbedPanePattern) && content.match(tabbedPaneSlider)) {
+        let result = content.replace(
+            mainPattern,
+            cssHeaderContents);
+        result = result.replace(
+                tabbedPanePattern,
+                cssRightToolbar);
+        result = result.replace(
+            tabbedPaneSlider,
+            cssTabSlider);
+
+        return result;
+    } else {
+        return null;
+    }
 }
