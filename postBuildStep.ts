@@ -1,15 +1,18 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-
 import * as fse from "fs-extra";
 import path from "path";
+
 import applyPaddingInlineCssPatch from "./src/host/polyfills/cssPaddingInline";
 import { applyCreateElementPatch, applyUIUtilsPatch } from "./src/host/polyfills/customElements";
 import { applyContentSecurityPolicyPatch } from "./src/host/polyfills/inspectorContentPolicy";
 import {
     applyCommonRevealerPatch,
-    applyInspectorCommonCssPatch,
-    applyInspectorViewPatch,
+    applyInspectorCommonCssHeaderContentsPatch,
+    applyInspectorCommonCssRightToolbarPatch,
+    applyInspectorCommonCssTabSliderPatch,
+    applyInspectorViewHandleActionPatch,
+    applyInspectorViewShowDrawerPatch,
     applyMainViewPatch,
     applySelectTabPatch,
 } from "./src/host/polyfills/simpleView";
@@ -79,10 +82,13 @@ async function patchFilesForWebView(toolsOutDir: string) {
     await patchFileForWebView("shell.js", toolsOutDir, true, [
         applyUIUtilsPatch,
         applyCreateElementPatch,
-        applyInspectorCommonCssPatch,
+        applyInspectorCommonCssHeaderContentsPatch,
+        applyInspectorCommonCssRightToolbarPatch,
+        applyInspectorCommonCssTabSliderPatch,
         applyCommonRevealerPatch,
         applyMainViewPatch,
-        applyInspectorViewPatch,
+        applyInspectorViewHandleActionPatch,
+        applyInspectorViewShowDrawerPatch,
         applySelectTabPatch,
     ]);
     await patchFileForWebView("elements/elements_module.js", toolsOutDir, true, [
@@ -97,10 +103,12 @@ async function patchFilesForWebView(toolsOutDir: string) {
     await patchFileForWebView("ui/UIUtils.js", toolsOutDir, false, [applyUIUtilsPatch]);
     await patchFileForWebView("dom_extension/DOMExtension.js", toolsOutDir, false, [applyCreateElementPatch]);
     await patchFileForWebView("elements/ElementsPanel.js", toolsOutDir, false, [applySetupTextSelectionPatch]);
-    await patchFileForWebView("themes/base.css", toolsOutDir, false, [applyInspectorCommonCssPatch]);
+    await patchFileForWebView("themes/base.css", toolsOutDir, false, [applyInspectorCommonCssHeaderContentsPatch,
+        applyInspectorCommonCssRightToolbarPatch, applyInspectorCommonCssTabSliderPatch]);
     await patchFileForWebView("common/Revealer.js", toolsOutDir, false, [applyCommonRevealerPatch]);
     await patchFileForWebView("main/Main.js", toolsOutDir, false, [applyMainViewPatch]);
-    await patchFileForWebView("ui/InspectorView.js", toolsOutDir, false, [applyInspectorViewPatch]);
+    await patchFileForWebView("ui/InspectorView.js", toolsOutDir, false, [applyInspectorViewHandleActionPatch,
+        applyInspectorViewShowDrawerPatch]);
     await patchFileForWebView("ui/TabbedPane.js", toolsOutDir, false, [applySelectTabPatch]);
     await patchFileForWebView("elements/elementsTreeOutline.css", toolsOutDir, false, [applyPaddingInlineCssPatch]);
     await patchFileForWebView("elements/stylesSectionTree.css", toolsOutDir, false, [applyPaddingInlineCssPatch]);

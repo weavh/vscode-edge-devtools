@@ -24,7 +24,7 @@ describe("simpleView", () => {
     });
 
     it("applyCommonRevealerPatch correctly changes text", async () => {
-        const comparableText = "let reveal = function(revealable, omitFocus) { // code";
+        const comparableText = "let reveal = function(revealable, omitFocus) {";
         let fileContents = getTextFromFile("common/Revealer.js");
 
         // The file was not found, so test that at least the text is being replaced.
@@ -37,25 +37,29 @@ describe("simpleView", () => {
             expect.stringContaining("let reveal = function revealInVSCode(revealable, omitFocus) {"));
     });
 
-    it("applyInspectorViewPatch correctly changes text", async () => {
-        const comparableText = "handleAction(context, actionId) { // code";
+    it("applyInspectorViewPatch correctly changes handleAction text", async () => {
+        const comparableText = "handleAction(context, actionId) {\n";
         let fileContents = getTextFromFile("ui/InspectorView.js");
         // The file was not found, so test that at least the text is being replaced.
         fileContents = fileContents ? fileContents : comparableText;
 
         const apply = await import("./simpleView");
-        const result = apply.applyInspectorViewPatch(fileContents);
+        const result = apply.applyInspectorViewHandleActionPatch(fileContents);
         expect(result).not.toEqual(null);
         expect(result).toEqual(
             expect.stringContaining("handleAction(context, actionId) { return false;"));
+    });
 
-        const drawerComparableText = "_showDrawer(focus) { // code";
-
+    it("applyInspectorViewPatch correctly changes _showDrawer text", async () => {
+        const comparableText = "_showDrawer(focus) {";
+        let fileContents = getTextFromFile("ui/InspectorView.js");
         // The file was not found, so test that at least the text is being replaced.
-        fileContents = fileContents ? fileContents : drawerComparableText;
-        const result2 = apply.applyInspectorViewPatch(fileContents);
-        expect(result2).not.toEqual(null);
-        expect(result2).toEqual(expect.stringContaining("_showDrawer(focus) { return false;"));
+        fileContents = fileContents ? fileContents : comparableText;
+
+        const apply = await import("./simpleView");
+        const result = apply.applyInspectorViewShowDrawerPatch(fileContents);
+        expect(result).not.toEqual(null);
+        expect(result).toEqual(expect.stringContaining("_showDrawer(focus) { return false;"));
     });
 
     it("applyMainViewPatch correctly changes text", async () => {
@@ -72,7 +76,7 @@ describe("simpleView", () => {
     });
 
     it("applySelectTabPatch correctly changes text", async () => {
-        const comparableText = "selectTab(id, userGesture, forceFocus) { // code";
+        const comparableText = "selectTab(id, userGesture, forceFocus) {";
         let fileContents = getTextFromFile("ui/TabbedPane.js");
 
         // The file was not found, so test that at least the text is being replaced.
@@ -98,7 +102,7 @@ describe("simpleView", () => {
         // The file was not found, so test that at least the text is being replaced.
         fileContents = fileContents ? fileContents : expectedCss;
         const apply = await import("./simpleView");
-        const result = apply.applyInspectorCommonCssPatch(fileContents);
+        const result = apply.applyInspectorCommonCssHeaderContentsPatch(fileContents);
         expect(result).not.toEqual(null);
         expect(result).toEqual(expect.stringContaining(expectedResult));
     });
@@ -123,7 +127,7 @@ describe("simpleView", () => {
         // The file was not found, so test that at least the text is being replaced.
         fileContents = fileContents ? fileContents : expectedCss;
         const apply = await import("./simpleView");
-        const result = apply.applyInspectorCommonCssPatch(fileContents);
+        const result = apply.applyInspectorCommonCssTabSliderPatch(fileContents);
         expect(result).not.toEqual(null);
         expect(result).toEqual(expect.stringContaining(expectedResult));
     });
@@ -141,7 +145,7 @@ describe("simpleView", () => {
         // The file was not found, so test that at least the text is being replaced.
         fileContents = fileContents ? fileContents : expectedCss;
         const apply = await import("./simpleView");
-        const result = apply.applyInspectorCommonCssPatch(fileContents);
+        const result = apply.applyInspectorCommonCssRightToolbarPatch(fileContents);
         expect(result).not.toEqual(null);
         expect(result).toEqual(expect.stringContaining(expectedResult));
     });
@@ -160,7 +164,7 @@ describe("simpleView", () => {
         // The file was not found, so test that at least the text is being replaced.
         fileContents = fileContents ? fileContents : expectedCss;
         const apply = await import("./simpleView");
-        const result = apply.applyInspectorCommonCssPatch(fileContents, true);
+        const result = apply.applyInspectorCommonCssHeaderContentsPatch(fileContents, true);
         expect(result).not.toEqual(null);
         expect(result).toEqual(expect.stringContaining(expectedResult));
     });
@@ -184,7 +188,7 @@ describe("simpleView", () => {
         // The file was not found, so test that at least the text is being replaced.
         fileContents = fileContents ? fileContents : expectedCss;
         const apply = await import("./simpleView");
-        const result = apply.applyInspectorCommonCssPatch(fileContents, true);
+        const result = apply.applyInspectorCommonCssTabSliderPatch(fileContents, true);
         expect(result).not.toEqual(null);
         expect(result).toEqual(expect.stringContaining(expectedResult));
     });
@@ -201,7 +205,7 @@ describe("simpleView", () => {
         // The file was not found, so test that at least the text is being replaced.
         fileContents = fileContents ? fileContents : expectedCss;
         const apply = await import("./simpleView");
-        const result = apply.applyInspectorCommonCssPatch(fileContents, true);
+        const result = apply.applyInspectorCommonCssRightToolbarPatch(fileContents, true);
         expect(result).not.toEqual(null);
         expect(result).toEqual(expect.stringContaining(expectedResult));
     });

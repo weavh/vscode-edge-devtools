@@ -36,14 +36,22 @@ export function applyCommonRevealerPatch(content: string) {
     }
 }
 
-export function applyInspectorViewPatch(content: string) {
+export function applyInspectorViewHandleActionPatch(content: string) {
     const pattern = /handleAction\(context,\s*actionId\)\s*{/g;
-    const drawerPattern = /_showDrawer\(focus\)\s*{/g;
 
-    if (content.match(pattern) && content.match(drawerPattern)) {
+    if (content.match(pattern)) {
         return content
-        .replace(pattern, "handleAction(context, actionId) { return false;")
-        .replace(drawerPattern, "_showDrawer(focus) { return false;");
+        .replace(pattern, "handleAction(context, actionId) { return false;");
+    } else {
+        return null;
+    }
+}
+
+export function applyInspectorViewShowDrawerPatch(content: string) {
+    const pattern = /_showDrawer\(focus\)\s*{/g;
+
+    if (content.match(pattern)) {
+        return content.replace(pattern, "_showDrawer(focus) { return false;");
     } else {
         return null;
     }
@@ -53,7 +61,7 @@ export function applyMainViewPatch(content: string) {
     const pattern = /const moreTools\s*=\s*[^;]+;/g;
 
     if (content.match(pattern)) {
-        content.replace(pattern, "const moreTools = { defaultSection: () => ({ appendItem: () => {} }) };");
+        return content.replace(pattern, "const moreTools = { defaultSection: () => ({ appendItem: () => {} }) };");
     } else {
         return null;
     }
@@ -93,39 +101,55 @@ export function applySelectTabPatch(content: string) {
     }
 }
 
-export function applyInspectorCommonCssPatch(content: string, isRelease?: boolean) {
+export function applyInspectorCommonCssHeaderContentsPatch(content: string, isRelease?: boolean) {
     const separator = (isRelease ? "\\n" : "\n");
     const cssHeaderContents =
         `.main-tabbed-pane .tabbed-pane-header-contents {
             display: none !important;
         }`.replace(/\n/g, separator);
+
+    const mainPattern = /(\.main-tabbed-pane\s*\.tabbed-pane-header-contents\s*\{([^\}]*)?\})/g;
+
+    if (content.match(mainPattern)) {
+        return content.replace(
+            mainPattern,
+            cssHeaderContents);
+    } else {
+        return null;
+    }
+}
+
+export function applyInspectorCommonCssRightToolbarPatch(content: string, isRelease?: boolean) {
+    const separator = (isRelease ? "\\n" : "\n");
     const cssRightToolbar =
         `.tabbed-pane-right-toolbar {
             display: none !important;
         }`.replace(/\n/g, separator);
+
+    const tabbedPanePattern = /(\.tabbed-pane-right-toolbar\s*\{([^\}]*)?\})/g;
+
+    if (content.match(tabbedPanePattern)) {
+        return content.replace(
+                tabbedPanePattern,
+                cssRightToolbar);
+    } else {
+        return null;
+    }
+}
+
+export function applyInspectorCommonCssTabSliderPatch(content: string, isRelease?: boolean) {
+    const separator = (isRelease ? "\\n" : "\n");
     const cssTabSlider =
         `.tabbed-pane-tab-slider {
             display: none !important;
         }`.replace(/\n/g, separator);
 
-    // we need to do this by parts as the code is split between base.css
-    // and dark.css
-    const mainPattern = /(\.main-tabbed-pane\s*\.tabbed-pane-header-contents\s*\{([^\}]*)?\})/g;
-    const tabbedPanePattern = /(\.tabbed-pane-right-toolbar\s*\{([^\}]*)?\})/g;
     const tabbedPaneSlider = /(\.tabbed-pane-tab-slider\s*\{([^\}]*)?\})/g;
 
-    if (content.match(mainPattern) && content.match(tabbedPanePattern) && content.match(tabbedPaneSlider)) {
-        let result = content.replace(
-            mainPattern,
-            cssHeaderContents);
-        result = result.replace(
-                tabbedPanePattern,
-                cssRightToolbar);
-        result = result.replace(
+    if (content.match(tabbedPaneSlider)) {
+        return content.replace(
             tabbedPaneSlider,
             cssTabSlider);
-
-        return result;
     } else {
         return null;
     }
