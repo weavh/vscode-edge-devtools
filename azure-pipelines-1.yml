@@ -19,19 +19,6 @@ steps:
     npm install
   displayName: 'npm install'
 - script: |
-    export EDGE_CHROMIUM_PATH=$(pwd)/edge/src
-    echo "$EDGE_CHROMIUM_PATH"
-    export EDGE_CHROMIUM_OUT_DIR=Release
-    echo "$EDGE_CHROMIUM_OUT_DIR"
-    npm run build
-  displayName: 'npm build'
-- script: |
-    EDGE_CHROMIUM_PATH=$(pwd)/edge
-    echo "$EDGE_CHROMIUM_PATH"
-    EDGE_CHROMIUM_OUT_DIR=Release
-    echo "$EDGE_CHROMIUM_OUT_DIR"
-  displayName: Testing vars
-- script: |
     output=$(node src/scripts/retrieveDownloadLink.js)
     curl "$output" --output edge.zip
   displayName: Downloading Edge Zip
@@ -40,24 +27,18 @@ steps:
     unzip "edge.zip" src/out/Release/gen/devtools/* -d edge
   displayName: Extracting Relevant Files
 - script: |
-    EDGE_CHROMIUM_PATH=$(pwd)/edge/src
-    echo "$EDGE_CHROMIUM_PATH"
-    EDGE_CHROMIUM_OUT_DIR=Release
-    echo "$EDGE_CHROMIUM_OUR_DIR"
+    export EDGE_CHROMIUM_PATH=$(pwd)/edge/src
+    export EDGE_CHROMIUM_OUT_DIR=Release
     npm run build
   displayName: 'npm build'
 - script: |
-    EDGE_CHROMIUM_PATH=$(pwd)/edge/src
-    echo "$EDGE_CHROMIUM_PATH"
-    EDGE_CHROMIUM_OUT_DIR=Release
-    echo "$EDGE_CHROMIUM_OUR_DIR"
+    export EDGE_CHROMIUM_PATH=$(pwd)/edge/src
+    export EDGE_CHROMIUM_OUT_DIR=Release
     npm run test
   displayName: 'test'
 - script: |
-    EDGE_CHROMIUM_PATH=$(pwd)/edge/src
-    echo "$EDGE_CHROMIUM_PATH"
-    EDGE_CHROMIUM_OUT_DIR=Release
-    echo "$EDGE_CHROMIUM_OUR_DIR"
+    export EDGE_CHROMIUM_PATH=$(pwd)/edge/src
+    export EDGE_CHROMIUM_OUT_DIR=Release
     npm run package
   displayName: 'npm run package'
 - task: CopyFiles@2
