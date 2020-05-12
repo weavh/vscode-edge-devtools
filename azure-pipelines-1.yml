@@ -22,9 +22,10 @@ steps:
     output=$(node src/scripts/retrieveDownloadLink.js)
     curl "$output" --output edge.zip
     mkdir edge
-    unzip edge.zip -d edge
+    unzip "edge.zip" src/out/Release/gen/devtools/*/* -d edge
+    unzip "edge.zip" src/out/Release/gen/devtools/* -d edge
 - script: |
-    set EDGE_CHROMIUM_PATH=%CD%/edge&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
+    set EDGE_CHROMIUM_PATH=%CD%/edge/src&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
     npm run build
   displayName: 'npm build'
 - script: |
