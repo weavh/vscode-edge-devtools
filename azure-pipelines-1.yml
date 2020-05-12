@@ -19,6 +19,12 @@ steps:
     npm install
   displayName: 'npm install'
 - script: |
+    EDGE_CHROMIUM_PATH=$(pwd)/edge
+    echo "$EDGE_CHROMIUM_PATH"
+    EDGE_CHROMIUM_OUT_DIR=Release
+    echo "$EDGE_CHROMIUM_OUT_DIR"
+  displayName: Testing vars
+- script: |
     output=$(node src/scripts/retrieveDownloadLink.js)
     curl "$output" --output edge.zip
   displayName: Downloading Edge Zip
