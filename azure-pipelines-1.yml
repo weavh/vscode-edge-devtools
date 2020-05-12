@@ -13,7 +13,9 @@ steps:
 - checkout: self
 - script: |
     dir
-    cd src/scripts
+    cd src
+    dir
+    cd scripts
     node retrieveDownloadLink.js > url.txt
     set /p url= < url.txt
     curl "%url%" --output edge.zip
