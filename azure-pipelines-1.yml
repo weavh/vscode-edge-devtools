@@ -24,7 +24,6 @@ steps:
   displayName: Downloading Edge Zip
 - script: |
     mkdir edge
-    unzip "edge.zip" src/out/Release/gen/devtools/*/* -d edge
     unzip "edge.zip" src/out/Release/gen/devtools/* -d edge
   displayName: Extracting Relevant Files
 - script: |
