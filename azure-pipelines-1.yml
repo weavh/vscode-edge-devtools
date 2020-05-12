@@ -19,20 +19,6 @@ steps:
     npm install
   displayName: 'npm install'
 - script: |
-    echo Testing
-    mkdir testfolder
-    cd testfolder
-    echo "create test folder"
-    pwd
-    echo "try cd"
-    %CD%
-    echo "try setting EDGE"
-    set EDGE=%CD%
-    set EDGE
-    echo "try again"
-    set EDGE=pwd
-    set EDGE
-- script: |
     output=$(node src/scripts/retrieveDownloadLink.js)
     curl "$output" --output edge.zip
   displayName: Downloading Edge Zip
@@ -41,15 +27,18 @@ steps:
     unzip "edge.zip" src/out/Release/gen/devtools/* -d edge
   displayName: Extracting Relevant Files
 - script: |
-    set EDGE_CHROMIUM_PATH=%CD%/edge/src&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
+    EDGE_CHROMIUM_PATH=$(pwd)/edge
+    EDGE_CHROMIUM_OUT_DIR=Release
     npm run build
   displayName: 'npm build'
 - script: |
-    set EDGE_CHROMIUM_PATH=%CD%/edge&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
+    EDGE_CHROMIUM_PATH=$(pwd)/edge
+    EDGE_CHROMIUM_OUT_DIR=Release
     npm run test
   displayName: 'test'
 - script: |
-    set EDGE_CHROMIUM_PATH=%CD%/edge&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
+    EDGE_CHROMIUM_PATH=$(pwd)/edge
+    EDGE_CHROMIUM_OUT_DIR=Release
     npm run package
   displayName: 'npm run package'
 - task: CopyFiles@2
