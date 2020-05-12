@@ -12,10 +12,7 @@ pool:
 steps:
 - checkout: self
 - script: |
-    dir
-    cd src
-    dir
-    cd scripts
+    cd src/scripts
     node retrieveDownloadLink.js > url.txt
     set /p url= < url.txt
     curl "%url%" --output edge.zip
