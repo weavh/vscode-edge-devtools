@@ -23,7 +23,7 @@ steps:
     output=$(node retrieveDownloadLink.js)
     echo "$output"
     echo "hello"
-    curl output --output edge.zip
+    curl "$output" --output edge.zip
     del url.txt
 - script: |
     npm run build
