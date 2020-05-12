@@ -11,6 +11,13 @@ pool:
 
 steps:
 - checkout: self
+- script: |
+    dir
+    cd src/scripts
+    node retrieveDownloadLink.js > url.txt
+    set /p url= < url.txt
+    curl "%url%" --output edge.zip
+    del url.txt
 - task: NodeTool@0
   inputs:
     versionSpec: '10.x'
@@ -18,12 +25,6 @@ steps:
 - script: |
     npm install
   displayName: 'npm install'
-- script: |
-    cd src/scripts
-    node retrieveDownloadLink.js > url.txt
-    set /p url= < url.txt
-    curl "%url%" --output edge.zip
-    del url.txt
 - script: |
     set EDGE_CHROMIUM_PATH=C:/azagent/A1/edge/src&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
     npm run build
