@@ -1,0 +1,39 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- checkout: self
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+- script: |
+    npm install
+  displayName: 'npm install'
+- script: |
+    set EDGE_CHROMIUM_PATH=C:/azagent/A1/edge/src&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
+    npm run build
+  displayName: 'npm build'
+- script: |
+    set EDGE_CHROMIUM_PATH=C:/azagent/A1/edge/src&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
+    npm run test
+  displayName: 'test'
+- script: |
+    set EDGE_CHROMIUM_PATH=C:/azagent/A1/edge/src&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
+    npm run package
+  displayName: 'npm run package'
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+  inputs:
+    Contents: '*.vsix'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
