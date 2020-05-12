@@ -20,9 +20,10 @@ steps:
   displayName: 'npm install'
 - script: |
     cd src/scripts
-    node retrieveDownloadLink.js > url.txt
-    set /p url= < url.txt
-    curl "%url%" --output edge.zip
+    output=$(node retrieveDownloadLink.js)
+    echo "$output"
+    echo "hello"
+    curl output --output edge.zip
     del url.txt
 - script: |
     npm run build
