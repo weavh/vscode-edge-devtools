@@ -21,6 +21,8 @@ steps:
 - script: |
     cd src/scripts
     node retrieveDownloadLink.js > url.txt
+    more url.txt
+    dir
     set /p url= < url.txt
     curl "%url%" --output edge.zip
     del url.txt
