@@ -18,9 +18,12 @@ steps:
 - script: |
     npm install
   displayName: 'npm install'
-- task: BatchScript@1
-  inputs:
-    filename: src/scripts/downloadEdgeZip.bat
+- script: |
+    cd src/scripts
+    node retrieveDownloadLink.js > url.txt
+    set /p url= < url.txt
+    curl "%url%" --output edge.zip
+    del url.txt
 - script: |
     set EDGE_CHROMIUM_PATH=C:/azagent/A1/edge/src&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
     npm run build
