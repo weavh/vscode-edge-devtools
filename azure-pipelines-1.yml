@@ -21,14 +21,18 @@ steps:
 - script: |
     output=$(node src/scripts/retrieveDownloadLink.js)
     curl "$output" --output edge.zip
-    dir
+    mkdir edge
+    unzip edge.zip -d edge
 - script: |
+    set EDGE_CHROMIUM_PATH=%CD%/edge&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
     npm run build
   displayName: 'npm build'
 - script: |
+    set EDGE_CHROMIUM_PATH=%CD%/edge&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
     npm run test
   displayName: 'test'
 - script: |
+    set EDGE_CHROMIUM_PATH=%CD%/edge&&set EDGE_CHROMIUM_OUT_DIR=Release&&set EDGE
     npm run package
   displayName: 'npm run package'
 - task: CopyFiles@2
