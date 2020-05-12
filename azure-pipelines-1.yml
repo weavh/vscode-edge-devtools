@@ -16,11 +16,22 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 - script: |
-    %CD%
-    echo hello
-    pwd
     npm install
   displayName: 'npm install'
+- script: |
+    echo Testing
+    mkdir testfolder
+    cd testfolder
+    echo "create test folder"
+    pwd
+    echo "try cd"
+    %CD%
+    echo "try setting EDGE"
+    set EDGE=%CD%
+    set EDGE
+    echo "try again"
+    set EDGE=pwd
+    set EDGE
 - script: |
     output=$(node src/scripts/retrieveDownloadLink.js)
     curl "$output" --output edge.zip
