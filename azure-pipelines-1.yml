@@ -33,18 +33,24 @@ steps:
     unzip "edge.zip" src/out/Release/gen/devtools/* -d edge
   displayName: Extracting Relevant Files
 - script: |
-    EDGE_CHROMIUM_PATH=$(pwd)/edge
+    EDGE_CHROMIUM_PATH=$(pwd)/edge/src
+    echo "$EDGE_CHROMIUM_PATH"
     EDGE_CHROMIUM_OUT_DIR=Release
+    echo "$EDGE_CHROMIUM_OUR_DIR"
     npm run build
   displayName: 'npm build'
 - script: |
-    EDGE_CHROMIUM_PATH=$(pwd)/edge
+    EDGE_CHROMIUM_PATH=$(pwd)/edge/src
+    echo "$EDGE_CHROMIUM_PATH"
     EDGE_CHROMIUM_OUT_DIR=Release
+    echo "$EDGE_CHROMIUM_OUR_DIR"
     npm run test
   displayName: 'test'
 - script: |
-    EDGE_CHROMIUM_PATH=$(pwd)/edge
+    EDGE_CHROMIUM_PATH=$(pwd)/edge/src
+    echo "$EDGE_CHROMIUM_PATH"
     EDGE_CHROMIUM_OUT_DIR=Release
+    echo "$EDGE_CHROMIUM_OUR_DIR"
     npm run package
   displayName: 'npm run package'
 - task: CopyFiles@2
