@@ -1,7 +1,7 @@
-function fetchJsonFromUrl(yourUrl){
+function fetchJsonFromUrl(url){
   var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-  var Httpreq = new XMLHttpRequest(); // a new request
-  Httpreq.open("GET",yourUrl,false);
+  var Httpreq = new XMLHttpRequest();
+  Httpreq.open("GET", url, false);
   Httpreq.send(null);
   return Httpreq.responseText;
 }
