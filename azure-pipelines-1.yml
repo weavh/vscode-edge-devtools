@@ -23,8 +23,8 @@ steps:
     curl "$output" --output edge.zip
   displayName: Downloading Edge Zip
 - script: |
-    mkdir edge
     unzip "edge.zip" src/out/Release/gen/devtools/* -d edge
+    unzip "edge.zip" src/third_party/devtools-frontend/src/front_end/* -d edge
   displayName: Extracting Relevant Files
 - script: |
     export EDGE_CHROMIUM_PATH=$(pwd)/edge/src
