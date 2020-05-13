@@ -20,24 +20,24 @@ steps:
   displayName: 'npm install'
 - script: |
     output=$(node src/scripts/retrieveDownloadLink.js)
-    curl "$output" --output edge.zip
+    curl "$output" --output $(Agent.TempDirectory)/edge.zip
   displayName: Downloading Edge Zip
 - script: |
-    unzip "edge.zip" src/out/Release/gen/devtools/* -d edge
-    unzip "edge.zip" src/third_party/devtools-frontend/src/front_end/* -d edge
+    unzip "edge.zip" src/out/Release/gen/devtools/* -d $(Agent.TempDirectory)/edge
+    unzip "edge.zip" src/third_party/devtools-frontend/src/front_end/* -d $(Agent.TempDirectory)/edge
   displayName: Extracting Relevant Files
 - script: |
-    export EDGE_CHROMIUM_PATH=$(pwd)/edge/src
+    export EDGE_CHROMIUM_PATH=$(Agent.TempDirectory)/edge/src
     export EDGE_CHROMIUM_OUT_DIR=Release
     npm run build
   displayName: 'npm build'
 - script: |
-    export EDGE_CHROMIUM_PATH=$(pwd)/edge/src
+    export EDGE_CHROMIUM_PATH=$(Agent.TempDirectory)/edge/src
     export EDGE_CHROMIUM_OUT_DIR=Release
     npm run test
   displayName: 'test'
 - script: |
-    export EDGE_CHROMIUM_PATH=$(pwd)/edge/src
+    export EDGE_CHROMIUM_PATH=$(Agent.TempDirectory)/edge/src
     export EDGE_CHROMIUM_OUT_DIR=Release
     npm run package
   displayName: 'npm run package'
