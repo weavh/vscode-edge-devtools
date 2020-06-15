@@ -13,20 +13,13 @@ function fetchDownloadUrl() {
   const jsonObjects = JSON.parse(jsonString);
   const platformString = retrievePlatform(platform);
   for (let object of jsonObjects) {
-<<<<<<< HEAD
-    if (object.product === 'Microsoft Edge DevTools' && object.release === '81.0.416.72') {
-=======
     if (object.product === 'Microsoft Edge DevTools' && object.release === TARGET_VERSION && object.platform === platformString) {
->>>>>>> 4896bcf... Update retrieveDownloadLink to have TARGET_VERSION const
       console.log(object.url);
       return;
     }
   }
 }
 
-<<<<<<< HEAD
-fetchDownloadUrl();
-=======
 function retrievePlatform(platform) {
   if (!platform) {
     return 'Windows x64';
@@ -41,4 +34,3 @@ function retrievePlatform(platform) {
 
 const platform = process.argv.slice(2)[0];
 fetchDownloadUrl(platform);
->>>>>>> 4896bcf... Update retrieveDownloadLink to have TARGET_VERSION const
