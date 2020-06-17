@@ -43,8 +43,9 @@ async function downloadZipFile(downloadUrl) {
     response.on('end', ()=>{
       fs.createReadStream('edge.zip').pipe(unzipper.Extract({path: 'out\\edge\\'}));
       fs.unlink('edge.zip', () => {} );
-      console.log('Edge files extracted to: ' + __dirname + '\\out\\edge');
-      console.log('Run this in cmd: "set EDGE_CHROMIUM_PATH=' + __dirname + '\\out\\edge\\src && set EDGE_CHROMIUM_OUT_DIR=Release"');
+      console.log('Edge files extracted to: ' + __dirname + '/out/edge');
+      const flipSlashDirName = __dirname.replace('/', '\\');
+      console.log('Run this in cmd: "set EDGE_CHROMIUM_PATH=' + flipSlashDirName + '\\out\\edge\\src && set EDGE_CHROMIUM_OUT_DIR=Release"');
     });
   });
 }
