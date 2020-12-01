@@ -85,6 +85,15 @@
                 }
             },
             {
+                "command": "vscode-edge-devtools-view.close",
+                "category": "Microsoft Edge Tools",
+                "title": "Close Target",
+                "icon": {
+                    "light": "resources/light/worker.svg",
+                    "dark": "resources/dark/worker.svg"
+                }
+            },
+            {
                 "command": "vscode-edge-devtools-view.copyItem",
                 "category": "Microsoft Edge Tools",
                 "title": "Copy Value"
@@ -406,6 +415,10 @@
                     "when": "view == vscode-edge-devtools-view.targets && viewItem == cdpTarget"
                 },
                 {
+                    "command": "vscode-edge-devtools-view.close",
+                    "when": "view == vscode-edge-devtools-view.targets && viewItem == cdpTarget"
+                },
+                {
                     "command": "vscode-edge-devtools-view.launch",
                     "when": "view == vscode-edge-devtools-view.targets"
                 },
@@ -438,6 +451,15 @@
                 },
                 {
                     "command": "vscode-edge-devtools-view.attach",
+                    "when": "view == vscode-edge-devtools-view.targets && viewItem == cdpTarget"
+                },
+                {
+                    "command": "vscode-edge-devtools-view.close",
+                    "when": "view == vscode-edge-devtools-view.targets && viewItem == cdpTarget",
+                    "group": "inline"
+                },
+                {
+                    "command": "vscode-edge-devtools-view.close",
                     "when": "view == vscode-edge-devtools-view.targets && viewItem == cdpTarget"
                 },
                 {

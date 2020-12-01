@@ -71,6 +71,11 @@ export function activate(context: vscode.ExtensionContext) {
             DevToolsPanel.createOrShow(context, telemetryReporter, target.websocketUrl, runtimeConfig);
         }));
     context.subscriptions.push(vscode.commands.registerCommand(
+        `${SETTINGS_VIEW_NAME}.close`,
+        (target: CDPTarget) => {
+            // close target
+        }));
+    context.subscriptions.push(vscode.commands.registerCommand(
         `${SETTINGS_VIEW_NAME}.copyItem`,
         (target: CDPTarget) => vscode.env.clipboard.writeText(target.tooltip)));
 }
@@ -204,6 +209,7 @@ export async function launch(context: vscode.ExtensionContext, launchUrl?: strin
             telemetryReporter.sendTelemetryEvent("command/launch/browser", browserProps);
         }
 
+        // capture browser session
         await launchBrowser(browserPath, port, url, userDataDir);
         await attach(context, url, config);
     }

@@ -300,6 +300,8 @@ export async function launchBrowser(browserPath: string, port: number, targetUrl
     }
 
     await puppeteer.launch({executablePath: browserPath, args, headless});
+
+    // return browser session
 }
 
 /**
