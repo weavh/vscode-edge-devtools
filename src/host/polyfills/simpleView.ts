@@ -375,13 +375,6 @@ export function applyThemePatch(content: string) {
     return replaceInSourceCode(content, pattern, replacementText);
 }
 
-export function applyScreencastCursorPatch(content: string) {
-    // This patch removes the touch cursor from the screencast view
-    const pattern = /\('div',\s*'screencast-canvas-container'\);/g
-    const replacementText = "this._canvasContainerElement.style.cursor = 'unset';";
-    return replaceInSourceCode(content, pattern, replacementText, KeepMatchedText.InFront);
-}
-
 export function applyRemovePreferencePatch(content: string) {
     // This patch returns early whe trying to remove localStorage which we already set as undefined
     const pattern = /removePreference\(name\)\s*{\s*delete window\.localStorage\[name\];\s*}/;
