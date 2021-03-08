@@ -168,7 +168,7 @@ export default class CDPTargetsProvider implements vscode.TreeDataProvider<CDPTa
             const id = setTimeout(() => {
               clearTimeout(id);
               resolve(null);
-            }, 1000);
+            }, 5000);
         });
 
         // If it takes over a second to download, we will resolve null and use default icons.
