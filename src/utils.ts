@@ -66,7 +66,7 @@ export const SETTINGS_STORE_NAME = "vscode-edge-devtools";
 export const SETTINGS_DEFAULT_USE_HTTPS = false;
 export const SETTINGS_DEFAULT_HOSTNAME = "localhost";
 export const SETTINGS_DEFAULT_PORT = 9222;
-export const SETTINGS_DEFAULT_URL = "about:blank";
+export let SETTINGS_DEFAULT_URL = "about:blank";
 export const SETTINGS_WEBVIEW_NAME = "Edge DevTools";
 export const SETTINGS_PREF_NAME = "devtools-preferences";
 export const SETTINGS_PREF_DEFAULTS = {
@@ -250,6 +250,15 @@ export function createTelemetryReporter(context: vscode.ExtensionContext): Reado
         // Fallback to a fake telemetry reporter
         return new DebugTelemetryReporter();
     }
+}
+
+/**
+ * Sets the extension startup page as the default url
+ *
+ * @param context The vscode context
+ */
+export function setDefaultStartPage(context: vscode.ExtensionContext): void {
+    SETTINGS_DEFAULT_URL = path.join(context.extensionPath, "startpage", "index.html");
 }
 
 /**

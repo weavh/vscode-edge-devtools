@@ -134,8 +134,8 @@
                 },
                 "vscode-edge-devtools.defaultUrl": {
                     "type": "string",
-                    "default": "about:blank",
-                    "description": "The default url to open when launching the browser without a target"
+                    "default": "",
+                    "description": "Set the default url to open when launching the browser without a target"
                 },
                 "vscode-edge-devtools.userDataDir": {
                     "type": [

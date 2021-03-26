@@ -20,6 +20,7 @@ import {
     IUserConfig,
     launchBrowser,
     openNewTab,
+    setDefaultStartPage,
     SETTINGS_DEFAULT_ATTACH_INTERVAL,
     SETTINGS_STORE_NAME,
     SETTINGS_VIEW_NAME,
@@ -113,6 +114,9 @@ export function activate(context: vscode.ExtensionContext) {
         `${SETTINGS_VIEW_NAME}.copyItem`,
         (target: CDPTarget) => vscode.env.clipboard.writeText(target.tooltip)));
     vscode.commands.executeCommand('setContext', 'titleCommandsRegistered', true);
+
+    // Set startup page as default URL when launching target
+    setDefaultStartPage(context);
 }
 
 export async function attach(
