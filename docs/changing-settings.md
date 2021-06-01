@@ -14,7 +14,7 @@ By default, the extension will launch the browser in its own window. This means 
 
 You can see an example of the change in the following screencast:
 
-![Example how to turn on the headless mode](img/basic_usage\(headless\).gif)
+![Example how to turn on the headless mode](img/basic_usage_headless.gif)
 
 ## Toggling Network Inspection
 
