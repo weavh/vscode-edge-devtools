@@ -1,4 +1,3 @@
-
 # Using the tools
 
 This extension operates in several modes - it can launch an instance of Microsoft Edge navigated to your app, it can attach to a running instance of Microsoft Edge or it can open a new instance for you. All modes require you to be serving your web application from local web server, which is started from either a Visual Studio Code task or from your command-line. Using the `url` parameter you tell Visual Studio Code which URL to either open or launch in the browser.

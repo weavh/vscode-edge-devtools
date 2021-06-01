@@ -13,7 +13,7 @@ Note: These are the mappings that are included by default out of the box, with e
     "webpack:///./*": "${webRoot}/*",
     "webpack:///*": "*",
     "webpack:///src/*": "${webRoot}/*",
-    "meteor://💻app/*": "${webRoot}/*"
+    "meteor:///app/*": "${webRoot}/*"
 }
 ```
 
@@ -35,9 +35,9 @@ Example:
 "webpack:///src/*": "${webRoot}/*" 
 Example:
 "webpack:///src/app.js" -> "/Users/me/project/app.js"
-"meteor://💻app/*": "${webRoot}/*"
+"meteor:///app/*": "${webRoot}/*"
 Example:
-"meteor://💻app/main.ts"` -> `"/Users/me/project/main.ts"
+"meteor:///app/main.ts"` -> `"/Users/me/project/main.ts"
 ```
 
 ## Ionic and gulp sourcemaps note
