@@ -4,7 +4,7 @@ This extension operates in several modes - it can launch an instance of Microsof
 
 ## Opening a new browser instance
 
-1. Select the **Microsoft Edge Tools** button in the **Activity Bar** on the left, .  In the **Side Bar**, the **MICROSOFT EDGE TOOLS: TARGETS** panel appears:
+1. Select the **Microsoft Edge Tools** button in the **Activity Bar**. In the **Side Bar**, the **MICROSOFT EDGE TOOLS: TARGETS** panel appears:
 
     ![The MICROSOFT EDGE TOOLS: TARGETS panel in the Side Bar of Visual Studio Code, showing the Launch Instance button](img/edge-tools-extension-in-context-docs-initial-side-bar.msft.png)
 
