@@ -1,7 +1,7 @@
 
 # Microsoft Edge Developer Tools for Visual Studio Code
 
-This is the documentation of the Microsoft Edge Developer Tools for Visual Studio Code extension. You can [Download the extension](https:/aka.ms/devtools-for-code) and [check the source code](https://github.com/microsoft/vscode-edge-devtools/blob/user/chheilma-docs-folder/docs/index.md).
+This is the documentation of the Microsoft Edge Developer Tools for Visual Studio Code extension. You can [Download the extension](https://aka.ms/devtools-for-code) and [check the source code](https://github.com/microsoft/vscode-edge-devtools/).
 
 ## Table of Contents
 
