@@ -40,7 +40,9 @@ See [CONTRIBUTING.md](https://github.com/Microsoft/vscode-edge-devtools/blob/mas
 
 ### Data and Telemetry
 
-This project collects usage data and sends it to Microsoft to help improve our products and services. Read [Microsoft's privacy statement](https://privacy.microsoft.com/en-US/privacystatement) to learn more.
+The extension gets data and telemetry from Visual Studio code we use to improve the product. If you don't want to allow this, you can find the instructions how to turn off telemetry [in the Visual Studio Code documentation](https://code.visualstudio.com/docs/getstarted/telemetry)
+
+**Data Collection**. The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services. You may turn off the telemetry as described in the repository. There are also some features in the software that may enable you and Microsoft to collect data from users of your applications. If you use these features, you must comply with applicable law, including providing appropriate notices to users of your applications together with a copy of Microsoft’s privacy statement. Our privacy statement is located at [https://go.microsoft.com/fwlink/?LinkID=824704](https://go.microsoft.com/fwlink/?LinkID=824704). You can learn more about data collection and use in the help documentation and our privacy statement. Your use of the software operate
 
 ### Reporting Security Issues
 
